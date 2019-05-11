@@ -4,26 +4,44 @@
 #include "FunctionTypeDefs.h"
 #include "CommandHandlers.h"
 
-FunctionHook<void(*)()>* _GameClientCommandsInstalling = nullptr;
-FunctionHook<void(*)()>* _GameClientCommandsUninstalling = nullptr;
+FunctionHook<void(*)()>* GameClientCommandsInstallHook = nullptr;
+FunctionHook<void(*)()>* GameClientCommandsUninstallHook = nullptr;
+FunctionHook<int(*)(char*, i32, i32)>* SendChatMessageHook = nullptr;
 
 namespace FunctionHandlers
 {
-    void GameClientCommandsInstalling()
+    void GameClientCommandsInstall()
     {
-        _GameClientCommandsInstalling->Unhook();
-        _GameClientCommandsInstalling->OriginalFunction();
-        _GameClientCommandsInstalling->Hook();
+        GameClientCommandsInstallHook->Unhook();
+        GameClientCommandsInstallHook->OriginalFunction();
+        GameClientCommandsInstallHook->Hook();
 
         CommandHandlers::Install();
     }
-    void GameClientCommandsUninstalling()
+    void GameClientCommandsUninstall()
     {
-        _GameClientCommandsUninstalling->Unhook();
-        _GameClientCommandsUninstalling->OriginalFunction();
-        _GameClientCommandsUninstalling->Hook();
+        GameClientCommandsUninstallHook->Unhook();
+        GameClientCommandsUninstallHook->OriginalFunction();
+        GameClientCommandsUninstallHook->Hook();
 
         CommandHandlers::Uninstall();
+    }
+
+    int SendChatMessage(char* message, i32 unk, i32 textSize)
+    {
+        i32 result = 0;
+        if (message[0] == '!')
+        {
+            WowFunc::ConsolePrint("Console Command: %s", message);
+        }
+        else
+        {
+            SendChatMessageHook->Unhook();
+            result = SendChatMessageHook->OriginalFunction(message, unk, textSize);
+            SendChatMessageHook->Hook();
+        }
+
+        return result;
     }
 
     void Handle_QueryObjectPosition(void* param, Opcode opcode, u32 time, DataStore* dataStore)
@@ -39,11 +57,13 @@ namespace FunctionHandlers
 
     void Setup()
     {
-        _GameClientCommandsInstalling = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsInstall, GameClientCommandsInstalling);
-        _GameClientCommandsUninstalling = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsUninstall, GameClientCommandsUninstalling);
+        GameClientCommandsInstallHook = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsInstall, GameClientCommandsInstall);
+        GameClientCommandsUninstallHook = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsUninstall, GameClientCommandsUninstall);
+        SendChatMessageHook = new FunctionHook<i32(*)(char*, i32, i32)>(WowFunc::SendChatMessage, SendChatMessage);
 
-        _GameClientCommandsInstalling->Hook();
-        _GameClientCommandsUninstalling->Hook();
+        GameClientCommandsInstallHook->Hook();
+        GameClientCommandsUninstallHook->Hook();
+        SendChatMessageHook->Hook();
 
         WowFunc::SetMessageHandler(Opcode::SMSG_QUERY_OBJECT_POSITION, Handle_QueryObjectPosition, 0);
 

@@ -12,6 +12,7 @@ typedef int FrameScript_Reload();
 typedef void ClientServices_SetMessageHandler(u16 opcode, void* handler, DWORD param);
 typedef void _ConsoleScreenInitialize();
 typedef void _SendBug(i32 type, const char* description);
+typedef int _SendChatMessage(char* message, i32 unk, i32 textSize);
 
 namespace WowFunc
 {
@@ -24,4 +25,5 @@ namespace WowFunc
     ClientServices_SetMessageHandler* SetMessageHandler = (ClientServices_SetMessageHandler*)Offsets::ClientServicesSetMessageHandlerAddress;
     _ConsoleScreenInitialize* ConsoleScreenInitialize = (_ConsoleScreenInitialize*)Offsets::ConsoleScreenInitializeAddress;
     _SendBug* SendBug = (_SendBug*)Offsets::SendBugOpcodeAddress;
+    _SendChatMessage* SendChatMessage = (_SendChatMessage*)Offsets::SendChatMessageAddress;
 }
