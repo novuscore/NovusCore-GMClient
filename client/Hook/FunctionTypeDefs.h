@@ -9,6 +9,7 @@ const u32 GameClientCommandsUninstallAddress = 0x406EF0;
 const u32 ConsolePrintAddress = 0x7653B0;
 const u32 ReloadUIAddress = 0x401B00;
 const u32 ClientServicesSetMessageHandlerAddress = 0x6B0B80;
+const u32 ConsoleScreenInitializeAddress = 0x766140;
 
 enum CommandCategory
 {
@@ -29,6 +30,7 @@ typedef void _GameClientCommandsUninstall();
 typedef void ConsolePrintF(const char* text, ...);
 typedef int FrameScript_Reload();
 typedef void ClientServices_SetMessageHandler(u16 opcode, void* handler, DWORD param);
+typedef void _ConsoleScreenInitialize();
 
 namespace WowFunc
 {
@@ -39,4 +41,5 @@ namespace WowFunc
     ConsolePrintF* ConsolePrint = (ConsolePrintF*)ConsolePrintAddress;
     FrameScript_Reload* ReloadUI = (FrameScript_Reload*)ReloadUIAddress;
     ClientServices_SetMessageHandler* SetMessageHandler = (ClientServices_SetMessageHandler*)ClientServicesSetMessageHandlerAddress;
+    _ConsoleScreenInitialize* ConsoleScreenInitialize = (_ConsoleScreenInitialize*)ConsoleScreenInitializeAddress;
 }

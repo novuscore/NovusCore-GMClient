@@ -24,8 +24,12 @@ void Initialize()
 
     printf("Patching FrameScript_InvalidPtrCheck\n");
     /* FrameScript__InvalidPtrCheck patched */
-    *(DWORD*)0xD415B8 = 1;
-    *(DWORD*)0xD415BC = 0x7FFFFFFF;
+    *reinterpret_cast<DWORD*>(0xD415B8) = 1;
+    *reinterpret_cast<DWORD*>(0xD415BC) = 0x7FFFFFFF;
+
+    /* Enable console */
+    *reinterpret_cast<DWORD*>(0x00CABCC4) = 1;
+    WowFunc::ConsoleScreenInitialize();
 
     printf("Registering Console Commands\n");
     FunctionHandlers::Initialize();
