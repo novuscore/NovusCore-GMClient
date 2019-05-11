@@ -31,4 +31,5 @@ namespace Offsets
     const u32 ConsoleScreenInitializeAddress = 0x766140;
     const u32 SendBugOpcodeAddress = 0x6B22A0;
     const u32 SendChatMessageAddress = 0x577D00;
+    const u32 FrameScriptExecuteAddress = 0x819210;
 }

@@ -1,7 +1,7 @@
 #pragma once
-#include "../NovusTypes.h"
-#include "../Opcodes.h"
-#include "../Offsets.h"
+#include "NovusTypes.h"
+#include "Opcodes.h"
+#include "Offsets.h"
 
 class DataStore;
 typedef void(__cdecl ClientServices_SendPacket)(DataStore* dataStore);

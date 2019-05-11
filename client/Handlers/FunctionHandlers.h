@@ -3,6 +3,10 @@
 #include "Hook/FunctionHook.h"
 #include "FunctionTypeDefs.h"
 #include "CommandHandlers.h"
+#include "Utils/StringUtils.h"
+
+#include <string>
+#include <vector>
 
 FunctionHook<void(*)()>* GameClientCommandsInstallHook = nullptr;
 FunctionHook<void(*)()>* GameClientCommandsUninstallHook = nullptr;
@@ -17,6 +21,7 @@ namespace FunctionHandlers
         GameClientCommandsInstallHook->Hook();
 
         CommandHandlers::Install();
+        SendChatMessageHook->Hook();
     }
     void GameClientCommandsUninstall()
     {
@@ -25,6 +30,7 @@ namespace FunctionHandlers
         GameClientCommandsUninstallHook->Hook();
 
         CommandHandlers::Uninstall();
+        SendChatMessageHook->Unhook();
     }
 
     int SendChatMessage(char* message, i32 unk, i32 textSize)
@@ -32,7 +38,28 @@ namespace FunctionHandlers
         i32 result = 0;
         if (message[0] == '!')
         {
-            WowFunc::ConsolePrint("Console Command: %s", message);
+            std::vector<std::string> splitCommandString = StringUtils::SplitString(message);
+            if (splitCommandString[0] == "!bug")
+            {
+                if (splitCommandString.size() > 1)
+                {
+                    std::string description = "";
+                    for (size_t i = 1; i < splitCommandString.size(); i++)
+                    {
+                        description += splitCommandString[i];
+
+                        if (i != splitCommandString.size() - 1)
+                            description += " ";
+                    }
+
+                    CommandHandlers::SendBug("bug", description.c_str());
+                    WowFunc::ChatConsolePrint("Sent bug Report to server.");
+                }
+                else
+                {
+                    WowFunc::ChatConsolePrint("Failed to send Bug Report, you must provide a description.");
+                }
+            }
         }
         else
         {
@@ -63,7 +90,6 @@ namespace FunctionHandlers
 
         GameClientCommandsInstallHook->Hook();
         GameClientCommandsUninstallHook->Hook();
-        SendChatMessageHook->Hook();
 
         WowFunc::SetMessageHandler(Opcode::SMSG_QUERY_OBJECT_POSITION, Handle_QueryObjectPosition, 0);
 

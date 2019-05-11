@@ -1,6 +1,6 @@
 #pragma once
-#include "../NovusTypes.h"
-#include "../NovusEnums.h"
+#include "NovusTypes.h"
+#include "NovusEnums.h"
 #include "WowStructs/DataStore.h"
 
 namespace CommandHandlers
@@ -20,7 +20,7 @@ namespace CommandHandlers
     void Install()
     {
         WowFunc::RegisterConsoleCommand("GetPosition", GetPosition, CATEGORY_DEBUG, "request client position from server");
-        WowFunc::RegisterConsoleCommand("bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server");
+        WowFunc::RegisterConsoleCommand("bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server with a specified description");
     }
     void Uninstall()
     {
