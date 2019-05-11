@@ -1,12 +1,10 @@
 #include "NovusTypes.h"
-#include "Hook/FunctionHandlers.h"
-#include <thread>
+#include "Handlers/FunctionHandlers.h"
 
 #include <Windows.h>
 #include <io.h>
+#include <thread>
 #include <fcntl.h>
-#include <cstdio>
-#include <functional>
 #include <cassert>
 
 void Initialize()
@@ -28,11 +26,11 @@ void Initialize()
     *reinterpret_cast<DWORD*>(0xD415BC) = 0x7FFFFFFF;
 
     /* Enable console */
-    *reinterpret_cast<DWORD*>(0x00CABCC4) = 1;
+    *reinterpret_cast<DWORD*>(0xCABCC4) = 1;
     WowFunc::ConsoleScreenInitialize();
 
     printf("Registering Console Commands\n");
-    FunctionHandlers::Initialize();
+    FunctionHandlers::Setup();
 }
 
 HWND gameWindow;
@@ -66,7 +64,6 @@ DWORD WINAPI CheckAttach(LPVOID lpParameter)
     assert(originalWndProc != NULL);
 
     SendMessage(gameWindow, WM_TIMER, 0x100, NULL);
-
     return 0;
 }
 
