@@ -3,6 +3,8 @@
 #include "NovusEnums.h"
 #include "WowStructs/DataStore.h"
 
+#include <algorithm>
+
 namespace CommandHandlers
 {
     void GetPosition()
@@ -13,8 +15,12 @@ namespace CommandHandlers
 
     void SendBug(const char* command, const char* description)
     {
-        if (strlen(description) > 0)
+        std::string desc(description);
+        desc.erase(std::remove_if(desc.begin(), desc.end(), ::isspace), desc.end());
+
+        if (desc.length() > 0)
         {
+
             WowFunc::SendBug(0, description);
             WowFunc::ChatConsolePrint("Sent bug Report to server.");
         }
