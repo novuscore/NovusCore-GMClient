@@ -13,17 +13,26 @@ namespace CommandHandlers
 
     void SendBug(const char* command, const char* description)
     {
-        WowFunc::SendBug(0, description);
+        if (strlen(description) > 0)
+        {
+            WowFunc::SendBug(0, description);
+            WowFunc::ChatConsolePrint("Sent bug Report to server.");
+        }
+        else
+        {
+            WowFunc::ChatConsolePrint("Failed to send Bug Report, you must provide a description.");
+        }
     }
 
 
     void Install()
     {
         WowFunc::RegisterConsoleCommand("GetPosition", GetPosition, CATEGORY_DEBUG, "request client position from server");
-        WowFunc::RegisterConsoleCommand("bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server with a specified description");
+        WowFunc::RegisterConsoleCommand("Bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server with a specified description");
     }
     void Uninstall()
     {
         WowFunc::UnregisterConsoleCommand("GetPosition");
+        WowFunc::UnregisterConsoleCommand("Bug");
     }
 }

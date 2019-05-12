@@ -53,12 +53,15 @@ namespace FunctionHandlers
                     }
 
                     CommandHandlers::SendBug("bug", description.c_str());
-                    WowFunc::ChatConsolePrint("Sent bug Report to server.");
                 }
                 else
                 {
                     WowFunc::ChatConsolePrint("Failed to send Bug Report, you must provide a description.");
                 }
+            }
+            else if (splitCommandString[0] == "!getposition")
+            {
+                CommandHandlers::GetPosition();
             }
         }
         else
@@ -79,7 +82,10 @@ namespace FunctionHandlers
         dataStore->GetFloat(y);
         dataStore->GetFloat(z);
 
-        WowFunc::ConsolePrint("Object Position (%f, %f, %f)", x, y, z);
+
+        char str[256];
+        i32 length = StringUtils::FormatString(str, sizeof(str), "Object Position(%f, %f, %f)", x, y, z);
+        WowFunc::ChatConsolePrint(str);
     }
 
     void Setup()
