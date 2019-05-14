@@ -47,5 +47,6 @@ namespace CommandHandlers
     {
         WowFunc::UnregisterConsoleCommand("GetPosition");
         WowFunc::UnregisterConsoleCommand("Bug");
+        WowFunc::UnregisterConsoleCommand("Blink");
     }
 }
