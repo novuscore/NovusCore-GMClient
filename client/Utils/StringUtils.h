@@ -1,5 +1,5 @@
 #pragma once
-#include "NovusTypes.h"
+#include "../NovusTypes.h"
 #include <string>
 #include <sstream>
 #include <vector>

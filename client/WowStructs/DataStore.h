@@ -1,11 +1,11 @@
 #pragma once
-#include "NovusTypes.h"
-#include "Opcodes.h"
-#include "Offsets.h"
+#include "../NovusTypes.h"
+#include "../Opcodes.h"
+#include "../Offsets.h"
 
 class DataStore;
 typedef void(__cdecl ClientServices_SendPacket)(DataStore* dataStore);
-ClientServices_SendPacket* SendPacket_1 = (ClientServices_SendPacket*)Offsets::ClientServices_SendPacketAddress;
+ClientServices_SendPacket* SendPacket_1 = (ClientServices_SendPacket*)Offsets::ClientServicesSendPacket;
 
 typedef DataStore* (__thiscall* InitializePtr)(DataStore* pData);
 typedef DataStore& (__thiscall* PutInt8Ptr)(DataStore* pData, i8 val);
@@ -80,23 +80,23 @@ public:
     void SendPacket() { Finalize(); SendPacket_1(this); }
 };
 
-DataStore* (__thiscall* DataStore::fpInit)(DataStore* pData) = reinterpret_cast<InitializePtr>(Offsets::CDataStoreGenPacketAddress);
+DataStore* (__thiscall* DataStore::fpInit)(DataStore* pData) = reinterpret_cast<InitializePtr>(Offsets::CDataStoreGenPacket);
 
-DataStore& (__thiscall* DataStore::fpPutInt8)(DataStore* pData, i8 val) = reinterpret_cast<PutInt8Ptr>(Offsets::CDataStorePutI8Address);
-DataStore& (__thiscall* DataStore::fpPutInt16)(DataStore* pData, i16 val) = reinterpret_cast<PutInt16Ptr>(Offsets::CDataStorePutI16Address);
-DataStore& (__thiscall* DataStore::fpPutInt32)(DataStore* pData, i32 val) = reinterpret_cast<PutInt32Ptr>(Offsets::CDataStorePutI32Address);
-DataStore& (__thiscall* DataStore::fpPutInt64)(DataStore* pData, i64 val) = reinterpret_cast<PutInt64Ptr>(Offsets::CDataStorePutI64Address);
-DataStore& (__thiscall* DataStore::fpPutFloat)(DataStore* pData, f32 val) = reinterpret_cast<PutFloatPtr>(Offsets::CDataStorePutF32Address);
-DataStore& (__thiscall* DataStore::fpPutString)(DataStore* pData, char const* pString) = reinterpret_cast<PutStringPtr>(Offsets::CDataStorePutStringAddress);
-DataStore& (__thiscall* DataStore::fpPutBytes)(DataStore* pData, u8* pBuf, u32 size) = reinterpret_cast<PutBytesPtr>(Offsets::CDataStorePutBytesAddress);
+DataStore& (__thiscall* DataStore::fpPutInt8)(DataStore* pData, i8 val) = reinterpret_cast<PutInt8Ptr>(Offsets::CDataStorePutI8);
+DataStore& (__thiscall* DataStore::fpPutInt16)(DataStore* pData, i16 val) = reinterpret_cast<PutInt16Ptr>(Offsets::CDataStorePutI16);
+DataStore& (__thiscall* DataStore::fpPutInt32)(DataStore* pData, i32 val) = reinterpret_cast<PutInt32Ptr>(Offsets::CDataStorePutI32);
+DataStore& (__thiscall* DataStore::fpPutInt64)(DataStore* pData, i64 val) = reinterpret_cast<PutInt64Ptr>(Offsets::CDataStorePutI64);
+DataStore& (__thiscall* DataStore::fpPutFloat)(DataStore* pData, f32 val) = reinterpret_cast<PutFloatPtr>(Offsets::CDataStorePutF32);
+DataStore& (__thiscall* DataStore::fpPutString)(DataStore* pData, char const* pString) = reinterpret_cast<PutStringPtr>(Offsets::CDataStorePutString);
+DataStore& (__thiscall* DataStore::fpPutBytes)(DataStore* pData, u8* pBuf, u32 size) = reinterpret_cast<PutBytesPtr>(Offsets::CDataStorePutBytes);
 
-DataStore& (__thiscall* DataStore::fpGetInt8)(DataStore* pData, i8& val) = reinterpret_cast<GetInt8Ptr>(Offsets::CDataStoreGetI8Address);
-DataStore& (__thiscall* DataStore::fpGetInt16)(DataStore* pData, i16& val) = reinterpret_cast<GetInt16Ptr>(Offsets::CDataStoreGetI16Address);
-DataStore& (__thiscall* DataStore::fpGetInt32)(DataStore* pData, i32& val) = reinterpret_cast<GetInt32Ptr>(Offsets::CDataStoreGetI32Address);
-DataStore& (__thiscall* DataStore::fpGetInt64)(DataStore* pData, i64& val) = reinterpret_cast<GetInt64Ptr>(Offsets::CDataStoreGetI64Address);
-DataStore& (__thiscall* DataStore::fpGetFloat)(DataStore* pData, f32& val) = reinterpret_cast<GetFloatPtr>(Offsets::CDataStoreGetF32Address);
-DataStore& (__thiscall* DataStore::fpGetString)(DataStore* pData, char* pString, u32 maxChars) = reinterpret_cast<GetStringPtr>(Offsets::CDataStoreGetStringAddress);
-DataStore& (__thiscall* DataStore::fpGetBytes)(DataStore* pData, u8* pBuf, u32 numBytes) = reinterpret_cast<GetBytesPtr>(Offsets::CDataStoreGetBytesAddress);
+DataStore& (__thiscall* DataStore::fpGetInt8)(DataStore* pData, i8& val) = reinterpret_cast<GetInt8Ptr>(Offsets::CDataStoreGetI8);
+DataStore& (__thiscall* DataStore::fpGetInt16)(DataStore* pData, i16& val) = reinterpret_cast<GetInt16Ptr>(Offsets::CDataStoreGetI16);
+DataStore& (__thiscall* DataStore::fpGetInt32)(DataStore* pData, i32& val) = reinterpret_cast<GetInt32Ptr>(Offsets::CDataStoreGetI32);
+DataStore& (__thiscall* DataStore::fpGetInt64)(DataStore* pData, i64& val) = reinterpret_cast<GetInt64Ptr>(Offsets::CDataStoreGetI64);
+DataStore& (__thiscall* DataStore::fpGetFloat)(DataStore* pData, f32& val) = reinterpret_cast<GetFloatPtr>(Offsets::CDataStoreGetF32);
+DataStore& (__thiscall* DataStore::fpGetString)(DataStore* pData, char* pString, u32 maxChars) = reinterpret_cast<GetStringPtr>(Offsets::CDataStoreGetString);
+DataStore& (__thiscall* DataStore::fpGetBytes)(DataStore* pData, u8* pBuf, u32 numBytes) = reinterpret_cast<GetBytesPtr>(Offsets::CDataStoreGetBytes);
 
-void(__thiscall* DataStore::fpFinalize)(DataStore* pData) = reinterpret_cast<FinalizePtr>(Offsets::CDataStoreFinalizeAddress);
-void(__thiscall* DataStore::fpDestroy)(DataStore* pData) = reinterpret_cast<DestroyPtr>(Offsets::CDataStoreDestroyAddress);
+void(__thiscall* DataStore::fpFinalize)(DataStore* pData) = reinterpret_cast<FinalizePtr>(Offsets::CDataStoreFinalize);
+void(__thiscall* DataStore::fpDestroy)(DataStore* pData) = reinterpret_cast<DestroyPtr>(Offsets::CDataStoreDestroy);

@@ -1,9 +1,9 @@
 #pragma once
-#include "NovusTypes.h"
-#include "Hook/FunctionHook.h"
-#include "FunctionTypeDefs.h"
+#include "../NovusTypes.h"
+#include "../Hook/FunctionHook.h"
+#include "../FunctionTypeDefs.h"
+#include "../Utils/StringUtils.h"
 #include "CommandHandlers.h"
-#include "Utils/StringUtils.h"
 
 #include <string>
 #include <vector>
@@ -14,6 +14,18 @@ FunctionHook<int(*)(char*, i32, i32)>* SendChatMessageHook = nullptr;
 
 namespace FunctionHandlers
 {
+    void GameInstallHooks()
+    {
+        GameClientCommandsInstallHook->Hook();
+        GameClientCommandsUninstallHook->Hook();
+    }
+    void GMClientHooksUninstall()
+    {
+        GameClientCommandsInstallHook->Unhook();
+        GameClientCommandsUninstallHook->Unhook();
+        SendChatMessageHook->Unhook();
+    }
+
     void GameClientCommandsInstall()
     {
         GameClientCommandsInstallHook->Unhook();
@@ -74,7 +86,7 @@ namespace FunctionHandlers
         return result;
     }
 
-    void Handle_QueryObjectPosition(void* param, Opcode opcode, u32 time, DataStore* dataStore)
+    void HandleQueryObjectPosition(void* param, Opcode opcode, u32 time, DataStore* dataStore)
     {
         f32 x = 0, y = 0, z = 0;
 
@@ -90,15 +102,13 @@ namespace FunctionHandlers
 
     void Setup()
     {
-        GameClientCommandsInstallHook = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsInstall, GameClientCommandsInstall);
-        GameClientCommandsUninstallHook = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsUninstall, GameClientCommandsUninstall);
-        SendChatMessageHook = new FunctionHook<i32(*)(char*, i32, i32)>(WowFunc::SendChatMessage, SendChatMessage);
+        GameClientCommandsInstallHook = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsInstall, FunctionHandlers::GameClientCommandsInstall);
+        GameClientCommandsUninstallHook = new FunctionHook<void(*)()>(WowFunc::GameClientCommandsUninstall, FunctionHandlers::GameClientCommandsUninstall);
+        SendChatMessageHook = new FunctionHook<i32(*)(char*, i32, i32)>(WowFunc::SendChatMessage, FunctionHandlers::SendChatMessage);
 
-        GameClientCommandsInstallHook->Hook();
-        GameClientCommandsUninstallHook->Hook();
+        FunctionHandlers::GameInstallHooks();
 
-        WowFunc::SetMessageHandler(Opcode::SMSG_QUERY_OBJECT_POSITION, Handle_QueryObjectPosition, 0);
-
+        WowFunc::SetMessageHandler(Opcode::SMSG_QUERY_OBJECT_POSITION, FunctionHandlers::HandleQueryObjectPosition, 0);
         WowFunc::ConsolePrint("NovusCore Initialized\n");
     }
 }

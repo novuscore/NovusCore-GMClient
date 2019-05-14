@@ -1,7 +1,7 @@
 #pragma once
-#include "NovusTypes.h"
-#include "NovusEnums.h"
-#include "WowStructs/DataStore.h"
+#include "../NovusTypes.h"
+#include "../NovusEnums.h"
+#include "../WowStructs/DataStore.h"
 
 #include <algorithm>
 
@@ -30,11 +30,18 @@ namespace CommandHandlers
         }
     }
 
+    void CastBlink()
+    {
+        WowFunc::RunLua("CastSpellByID(1953)");
+    }
 
     void Install()
     {
         WowFunc::RegisterConsoleCommand("GetPosition", GetPosition, CATEGORY_DEBUG, "request client position from server");
         WowFunc::RegisterConsoleCommand("Bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server with a specified description");
+
+        /* Development Purposes */
+        WowFunc::RegisterConsoleCommand("Blink", CastBlink, CATEGORY_DEBUG, "cast blink");
     }
     void Uninstall()
     {

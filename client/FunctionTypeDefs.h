@@ -15,26 +15,34 @@ typedef void ClientServices_SetMessageHandler(u16 opcode, void* handler, DWORD p
 typedef void _ConsoleScreenInitialize();
 typedef void _SendBug(i32 type, const char* description);
 typedef int _SendChatMessage(char* message, i32 unk, i32 textSize);
-typedef int _FrameScriptExecute(const char* message1, const char* message2);
+typedef int _FrameScriptExecute(const char* message1, const char* message2, DWORD unk);
 
 namespace WowFunc
 {
-    ConsoleCommandRegister* RegisterConsoleCommand = (ConsoleCommandRegister*)Offsets::RegisterConsoleCommandAddress;
-    ConsoleCommandUnregister* UnregisterConsoleCommand = (ConsoleCommandUnregister*)Offsets::UnregisterConsoleCommandAddress;
-    _GameClientCommandsInstall* GameClientCommandsInstall = (_GameClientCommandsInstall*)Offsets::GameClientCommandsInstallAddress;
-    _GameClientCommandsUninstall* GameClientCommandsUninstall = (_GameClientCommandsUninstall*)Offsets::GameClientCommandsUninstallAddress;
-    ConsolePrintF* ConsolePrint = (ConsolePrintF*)Offsets::ConsolePrintAddress;
-    FrameScript_Reload* ReloadUI = (FrameScript_Reload*)Offsets::ReloadUIAddress;
-    ClientServices_SetMessageHandler* SetMessageHandler = (ClientServices_SetMessageHandler*)Offsets::ClientServicesSetMessageHandlerAddress;
-    _ConsoleScreenInitialize* ConsoleScreenInitialize = (_ConsoleScreenInitialize*)Offsets::ConsoleScreenInitializeAddress;
-    _SendBug* SendBug = (_SendBug*)Offsets::SendBugOpcodeAddress;
-    _SendChatMessage* SendChatMessage = (_SendChatMessage*)Offsets::SendChatMessageAddress;
-    _FrameScriptExecute* FrameScriptExecute = (_FrameScriptExecute*)Offsets::FrameScriptExecuteAddress;
+    ConsoleCommandRegister* RegisterConsoleCommand = (ConsoleCommandRegister*)Offsets::RegisterConsoleCommand;
+    ConsoleCommandUnregister* UnregisterConsoleCommand = (ConsoleCommandUnregister*)Offsets::UnregisterConsoleCommand;
+    _GameClientCommandsInstall* GameClientCommandsInstall = (_GameClientCommandsInstall*)Offsets::GameClientCommandsInstall;
+    _GameClientCommandsUninstall* GameClientCommandsUninstall = (_GameClientCommandsUninstall*)Offsets::GameClientCommandsUninstall;
+    ConsolePrintF* ConsolePrint = (ConsolePrintF*)Offsets::ConsolePrint;
+    FrameScript_Reload* ReloadUI = (FrameScript_Reload*)Offsets::ReloadUI;
+    ClientServices_SetMessageHandler* SetMessageHandler = (ClientServices_SetMessageHandler*)Offsets::ClientServicesSetMessageHandler;
+    _ConsoleScreenInitialize* ConsoleScreenInitialize = (_ConsoleScreenInitialize*)Offsets::ConsoleScreenInitialize;
+    _SendBug* SendBug = (_SendBug*)Offsets::SendBugOpcode;
+    _SendChatMessage* SendChatMessage = (_SendChatMessage*)Offsets::SendChatMessage;
+    _FrameScriptExecute* FrameScriptExecute = (_FrameScriptExecute*)Offsets::FrameScriptExecute;
 
+    int RunLua(std::string script)
+    {
+        return FrameScriptExecute(script.c_str(), "", 0);
+    }
+    
+    void SetConsoleKey(char key)
+    {
+        *reinterpret_cast<DWORD*>(Offsets::ConsoleKey) = key;
+    }
     void ChatPrint(std::string message)
     {
-        std::string finalMessage = "print(\"" + message + "\")";
-        FrameScriptExecute(finalMessage.c_str(), finalMessage.c_str());
+        RunLua("print(\"" + message + "\")");
     }
     void ChatConsolePrint(std::string message)
     {
