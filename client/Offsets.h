@@ -9,7 +9,6 @@ namespace Offsets
     const u32 GameClientCommandsInstall = 0x407870;
     const u32 GameClientCommandsUninstall = 0x406EF0;
     const u32 ConsolePrint = 0x7653B0;
-    const u32 ReloadUI = 0x401B00;
     const u32 CDataStoreGenPacket = 0x401050;
     const u32 CDataStorePutI8 = 0x47AFE0;
     const u32 CDataStorePutI16 = 0x47B040;
@@ -33,10 +32,21 @@ namespace Offsets
     const u32 SendBugOpcode = 0x6B22A0;
     const u32 SendChatMessage = 0x577D00;
     const u32 FrameScriptExecute = 0x819210;
+    const u32 FrameScriptRegisterFunction = 0x817F90;
+    const u32 FrameScriptUnregisterFunction = 0x817FD0;
+    const u32 FrameScriptPushNumber = 0x84E2A0;
+    const u32 FrameScriptPushString = 0x84E350;
+    const u32 FrameScriptGetString = 0x84E0E0;
+    const u32 GetGuidByToken = 0x60C1C0;
+    const u32 SetFocusByToken = 0x522480;
+    const u32 LoadScriptFunctions = 0x5120E0;
+    const u32 UnloadScriptFunctions = 0x512280;
 
     // Variable Offsets
     const u32 TextSectionMinimumAddress = 0xD415B8;
     const u32 TextSectionMaximumAddress = 0xD415BC;
     const u32 IsConsoleActive = 0xCABCC4;
     const u32 ConsoleKey = 0xADBAC4;
+    const u32 RenderFlags = 0xCD774C;
+    const u32 Gamestate = 0xB6A9E0;
 }

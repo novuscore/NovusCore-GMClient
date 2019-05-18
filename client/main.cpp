@@ -14,8 +14,6 @@ HMODULE dllModule;
 HWND processWindow;
 WNDPROC processWndProc;
 
-DWORD TextSectionMinimumValue = 0;
-DWORD TextSectionMaximumValue = 0;
 DWORD IsConsoleActiveValue = 0;
 
 void Unload(bool cleanup = true)
@@ -27,11 +25,10 @@ void Unload(bool cleanup = true)
         CommandHandlers::Uninstall();
 
         /* Restore original FrameScript__InvalidPtrCheck */
-        *reinterpret_cast<DWORD*>(Offsets::TextSectionMinimumAddress) = TextSectionMinimumValue;
-        *reinterpret_cast<DWORD*>(Offsets::TextSectionMinimumAddress) = TextSectionMaximumValue;
+        WowFunc::FrameScript::RestoreInvalidPointerCheck();
 
         /* Restore original active console state */
-        *reinterpret_cast<DWORD*>(Offsets::IsConsoleActive) = 1;
+        WowFunc::Console::SetActive(WowFunc::Console::OriginalActiveState);
     }
 
     /* 
@@ -46,6 +43,14 @@ void Unload(bool cleanup = true)
         active or inactive, so this shouldn't be a problem, however it is a bit annoying.
     */
     FreeConsole();
+}
+
+DWORD WINAPI CheckAutoLogin(LPVOID lpParameter)
+{
+    Sleep(1000);
+    SendMessage(processWindow, WM_TIMER, 0x101, NULL);
+
+    return 1;
 }
 
 void Initialize()
@@ -67,23 +72,46 @@ void Initialize()
         return;
     }
 
-    printf("Patching FrameScript_InvalidPtrCheck\n");
     /* FrameScript__InvalidPtrCheck patched */
-    TextSectionMinimumValue = *reinterpret_cast<DWORD*>(Offsets::TextSectionMinimumAddress);
-    TextSectionMaximumValue = *reinterpret_cast<DWORD*>(Offsets::TextSectionMaximumAddress);
-    *reinterpret_cast<DWORD*>(Offsets::TextSectionMinimumAddress) = 1;
-    *reinterpret_cast<DWORD*>(Offsets::TextSectionMaximumAddress) = 0x7FFFFFFF;
+    printf("Patching FrameScript_InvalidPtrCheck\n");
+    WowFunc::FrameScript::PatchInvalidPointerCheck();
 
     /* Enable console and set console key */
-    IsConsoleActiveValue = *reinterpret_cast<DWORD*>(Offsets::IsConsoleActive);
-    *reinterpret_cast<DWORD*>(Offsets::IsConsoleActive) = 1;
+    u32 consoleKey = ConfigHandler::ConfigFile["ConsoleKey"];
+    WowFunc::Console::SetActive(true);
+    WowFunc::Console::SetKey(consoleKey);
+    WowFunc::Console::Initialize();
 
-    u32 consoleKey = ConfigHandler::ConfigFile["key"].get<u32>();
-    WowFunc::SetConsoleKey(consoleKey);
-    WowFunc::ConsoleScreenInitialize();
-    
+    if (WowFunc::FrameScript::IsLoginScreen())
+    {
+        CreateThread(0, 0, CheckAutoLogin, 0, 0, nullptr);
+    }
+
     printf("Registering Console Commands\n");
     FunctionHandlers::Setup();
+}
+
+void LoginToGame()
+{
+    std::string accountName = ConfigHandler::ConfigFile["AccountName"];
+    bool setAccountName = accountName != "" && !accountName.empty();
+    if (setAccountName)
+    {
+        WowFunc::RunLua("AccountLoginAccountEdit:SetText('" + accountName + "');");
+    }
+
+    std::string password = ConfigHandler::ConfigFile["Password"];
+    bool setPassword = password != "" && !password.empty();
+    if (setPassword)
+    {
+        WowFunc::RunLua("AccountLoginPasswordEdit:SetText('" + password + "');");
+    }
+
+    bool autoLogin = ConfigHandler::ConfigFile["AutoLogin"];
+    if (autoLogin == 1 && setAccountName && setPassword)
+    {
+        WowFunc::RunLua("AccountLogin_Login();");
+    }
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -95,6 +123,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             if (wParam == 0x100)
             {
                 Initialize();
+            }
+            else if (wParam == 0x101)
+            {
+                LoginToGame();
             }
             break;
         }

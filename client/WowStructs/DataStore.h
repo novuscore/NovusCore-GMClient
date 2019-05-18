@@ -66,7 +66,7 @@ public:
     DataStore& PutInt64(i64 val) { return fpPutInt64(this, val); }
     DataStore& PutFloat(f32 val) { return fpPutFloat(this, val); }
     DataStore& PutString(char const* pString) { return fpPutString(this, pString); }
-    DataStore& PutPutBytes(u8* pBuf, u32 size) { return fpPutBytes(this, pBuf, size); }
+    DataStore& PutBytes(u8* pBuf, u32 size) { return fpPutBytes(this, pBuf, size); }
 
     DataStore& GetInt8(i8& val) { return fpGetInt8(this, val); }
     DataStore& GetInt16(i16& val) { return fpGetInt16(this, val); }

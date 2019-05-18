@@ -22,31 +22,31 @@ namespace CommandHandlers
         {
 
             WowFunc::SendBug(0, description);
-            WowFunc::ChatConsolePrint("Sent bug Report to server.");
+            WowFunc::Chat::Print("Sent bug Report to server.");
         }
         else
         {
-            WowFunc::ChatConsolePrint("Failed to send Bug Report, you must provide a description.");
+            WowFunc::Chat::Print("Failed to send Bug Report, you must provide a description.");
         }
     }
 
-    void CastBlink()
+    void RunLua(const char* command, const char* description)
     {
-        WowFunc::RunLua("CastSpellByID(1953)");
+        WowFunc::RunLua(description);
     }
 
     void Install()
     {
-        WowFunc::RegisterConsoleCommand("GetPosition", GetPosition, CATEGORY_DEBUG, "request client position from server");
-        WowFunc::RegisterConsoleCommand("Bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server with a specified description");
+        WowFunc::Console::RegisterCommand("GetPosition", GetPosition, CATEGORY_DEBUG, "request client position from server");
+        WowFunc::Console::RegisterCommand("Bug", SendBug, CATEGORY_DEBUG, "reports a bug to the server with a specified description");
 
         /* Development Purposes */
-        WowFunc::RegisterConsoleCommand("Blink", CastBlink, CATEGORY_DEBUG, "cast blink");
+        WowFunc::Console::RegisterCommand("RunLua", RunLua, CATEGORY_DEBUG, "run a lua string");
     }
     void Uninstall()
     {
-        WowFunc::UnregisterConsoleCommand("GetPosition");
-        WowFunc::UnregisterConsoleCommand("Bug");
-        WowFunc::UnregisterConsoleCommand("Blink");
+        WowFunc::Console::UnregisterCommand("GetPosition");
+        WowFunc::Console::UnregisterCommand("Bug");
+        WowFunc::Console::UnregisterCommand("RunLua");
     }
 }

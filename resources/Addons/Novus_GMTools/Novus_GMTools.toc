@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: Novus GM Tools
+## Notes: ??
+## Author: NovusCore
+
+Dependencies\FrameBuilder.lua
+Novus_GMTools.lua
