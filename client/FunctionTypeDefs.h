@@ -103,7 +103,6 @@ namespace WowFunc
     {
         typedef u64 FuncGetGuidByToken(const char* token);
         typedef void FuncSetFocusByToken(Lua::lua_State* state);
-        typedef i32 FuncSetFocus();
 
         FuncGetGuidByToken* GetGuidByToken = (FuncGetGuidByToken*)Offsets::GetGuidByToken;
         FuncSetFocusByToken* SetFocusByToken = (FuncSetFocusByToken*)Offsets::SetFocusByToken;
@@ -177,7 +176,7 @@ namespace WowFunc
                 return true;
             }
         }
-        bool ToggleTris()
+        bool ToggleTriangles()
         {
             if (*RenderFlags & RENDERFLAG_TRIANGLES)
             {

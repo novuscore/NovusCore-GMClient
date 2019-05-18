@@ -12,7 +12,7 @@ namespace LuaHandlers
     }
     int Debug_ToggleTriangles(WowFunc::Lua::lua_State* state)
     {
-        bool result = WowFunc::Graphics::ToggleTris();
+        bool result = WowFunc::Graphics::ToggleTriangles();
         WowFunc::Lua::PushNumber(state, result);
         return 1;
     }
