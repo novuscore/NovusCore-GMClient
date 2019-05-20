@@ -3,5 +3,8 @@
 ## Notes: ??
 ## Author: NovusCore
 
+Dependencies\Utils.lua
 Dependencies\FrameBuilder.lua
+UnitPopupDefinitions.lua
+UnitPopupFunctions.lua
 Novus_GMTools.lua

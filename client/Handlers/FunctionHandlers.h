@@ -14,6 +14,7 @@ FunctionHook<void(*)()>* GameClientCommandsUninstallHook = nullptr;
 FunctionHook<i32(*)(char*, i32, i32)>* SendChatMessageHook = nullptr;
 FunctionHook<i32(*)()>* LoadScriptFunctionsHook = nullptr;
 FunctionHook<i32(*)()>* UnloadScriptFunctionsHook = nullptr;
+FunctionHook<char(__fastcall*)(void* pthis, SHA_CTX*, u8*, i32)>* ShaUpdate2Hook = nullptr;
 
 namespace FunctionHandlers
 {
@@ -23,6 +24,7 @@ namespace FunctionHandlers
         GameClientCommandsUninstallHook->Hook();
         LoadScriptFunctionsHook->Hook();
         UnloadScriptFunctionsHook->Hook();
+        //ShaUpdate2Hook->Hook();
     }
     void GMClientHooksUninstall()
     {
@@ -31,6 +33,7 @@ namespace FunctionHandlers
         SendChatMessageHook->Unhook();
         LoadScriptFunctionsHook->Unhook();
         UnloadScriptFunctionsHook->Unhook();
+        //ShaUpdate2Hook->Unhook();
     }
 
     void GameClientCommandsInstall()
@@ -101,6 +104,8 @@ namespace FunctionHandlers
 
         WowFunc::Lua::RegisterFunction("Debug_ToggleTerrain", LuaHandlers::Debug_ToggleTerrain);
         WowFunc::Lua::RegisterFunction("Debug_ToggleTriangles", LuaHandlers::Debug_ToggleTriangles);
+        WowFunc::Lua::RegisterFunction("GM_SetSpeed", LuaHandlers::GM_SetSpeed);
+        WowFunc::Lua::RegisterFunction("GM_ToggleFlyingMode", LuaHandlers::GM_ToggleFlying);
         WowFunc::Lua::RegisterFunction("SetFocusByToken", LuaHandlers::SetFocusByToken);
 
         return 1;
@@ -114,6 +119,8 @@ namespace FunctionHandlers
 
         WowFunc::Lua::UnregisterFunction("Debug_ToggleTerrain");
         WowFunc::Lua::UnregisterFunction("Debug_ToggleTriangles");
+        WowFunc::Lua::UnregisterFunction("GM_SetSpeed");
+        WowFunc::Lua::UnregisterFunction("GM_ToggleFlyingMode");
         WowFunc::Lua::UnregisterFunction("SetFocusByToken");
 
         return 1;
@@ -132,6 +139,18 @@ namespace FunctionHandlers
         WowFunc::Print(str);
     }
 
+    char __fastcall ShaUpdate2(void* pthis, SHA_CTX* shaCTX, u8* data, i32 length)
+    {
+        std::string dataInText(reinterpret_cast<char const*>(data), length);
+        printf("ShaUpdate2(%i): %s\n\n", length, dataInText.c_str());
+
+        ShaUpdate2Hook->Unhook();
+        ShaUpdate2Hook->OriginalFunction(pthis, shaCTX, data, length);
+        ShaUpdate2Hook->Hook();
+
+        return 0;
+    }
+
     void Setup()
     {
         GameClientCommandsInstallHook = new FunctionHook<void(*)()>(WowFunc::Console::InstallCommands, FunctionHandlers::GameClientCommandsInstall);
@@ -139,6 +158,7 @@ namespace FunctionHandlers
         SendChatMessageHook = new FunctionHook<i32(*)(char*, i32, i32)>(WowFunc::SendChatMessage, FunctionHandlers::SendChatMessage);
         LoadScriptFunctionsHook = new FunctionHook<i32(*)()>(WowFunc::FrameScript::LoadScriptFunctions, FunctionHandlers::LoadScriptFunctions);
         UnloadScriptFunctionsHook = new FunctionHook<i32(*)()>(WowFunc::FrameScript::UnloadScriptFunctions, FunctionHandlers::UnloadScriptFunctions);
+        ShaUpdate2Hook = new FunctionHook<char(__fastcall*)(void* pthis, SHA_CTX*, u8*, i32)>(WowFunc::ShaUpdate2, FunctionHandlers::ShaUpdate2);
 
         FunctionHandlers::GMClientHooksInstall();
         WowFunc::ClientService::SetMessageHandler(Opcode::SMSG_QUERY_OBJECT_POSITION, FunctionHandlers::HandleQueryObjectPosition, 0);

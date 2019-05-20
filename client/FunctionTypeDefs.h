@@ -2,16 +2,29 @@
 #include "NovusTypes.h"
 #include "NovusEnums.h"
 #include "Offsets.h"
+#include "WowStructs/DataStore.h"
 
 #include <string>
+
+#define SHA_LONG unsigned int
+#define SHA_LBLOCK 16
+typedef struct SHAstate_st
+{
+    SHA_LONG h0, h1, h2, h3, h4;
+    SHA_LONG Nl, Nh;
+    SHA_LONG data[SHA_LBLOCK];
+    unsigned int num;
+} SHA_CTX;
 
 namespace WowFunc
 {
     typedef void FuncSendBug(i32 type, const char* description);
     typedef int FuncSendChatMessage(char* message, i32 unk, i32 textSize);
+    typedef char __fastcall FuncShaUpdate2(void* pthis, SHA_CTX* shaCTX, u8* data, i32 length);
 
     FuncSendBug* SendBug = (FuncSendBug*)Offsets::SendBugOpcode;
     FuncSendChatMessage* SendChatMessage = (FuncSendChatMessage*)Offsets::SendChatMessage;
+    FuncShaUpdate2* ShaUpdate2 = (FuncShaUpdate2*)Offsets::ShaUpdate2;
 
     namespace Console
     {
@@ -83,13 +96,17 @@ namespace WowFunc
         typedef int FuncFrameScriptUnregisterFunction(const char* function);
         typedef int FuncFrameScriptPushNumber(lua_State* luaState, f64 number);
         typedef int FuncFrameScriptPushString(lua_State* luaState, const char* value);
+        typedef double FuncFrameScriptGetNumber(lua_State* luaState, i32 stackPosition);
         typedef char* FuncFrameScriptGetString(lua_State* luaState, i32 stackPosition, i32 unk);
+        typedef bool FuncFrameScriptGetBool(lua_State* luaState, i32 stackPosition);
 
         FuncFrameScriptRegisterFunction* RegisterFunction = (FuncFrameScriptRegisterFunction*)Offsets::FrameScriptRegisterFunction;
         FuncFrameScriptUnregisterFunction* UnregisterFunction = (FuncFrameScriptUnregisterFunction*)Offsets::FrameScriptUnregisterFunction;
         FuncFrameScriptPushNumber* PushNumber = (FuncFrameScriptPushNumber*)Offsets::FrameScriptPushNumber;
         FuncFrameScriptPushString* PushString = (FuncFrameScriptPushString*)Offsets::FrameScriptPushString;
+        FuncFrameScriptGetNumber* GetNumber = (FuncFrameScriptGetNumber*)Offsets::FrameScriptGetNumber;
         FuncFrameScriptGetString* GetString = (FuncFrameScriptGetString*)Offsets::FrameScriptGetString;
+        FuncFrameScriptGetBool* GetBool = (FuncFrameScriptGetBool*)Offsets::FrameScriptGetBool;
     }
 
     namespace ClientService

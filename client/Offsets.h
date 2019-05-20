@@ -36,11 +36,14 @@ namespace Offsets
     const u32 FrameScriptUnregisterFunction = 0x817FD0;
     const u32 FrameScriptPushNumber = 0x84E2A0;
     const u32 FrameScriptPushString = 0x84E350;
+    const u32 FrameScriptGetNumber = 0x84E030;
     const u32 FrameScriptGetString = 0x84E0E0;
+    const u32 FrameScriptGetBool = 0x84E0B0;
     const u32 GetGuidByToken = 0x60C1C0;
     const u32 SetFocusByToken = 0x522480;
     const u32 LoadScriptFunctions = 0x5120E0;
     const u32 UnloadScriptFunctions = 0x512280;
+    const u32 ShaUpdate2 = 0x6CA180;
 
     // Variable Offsets
     const u32 TextSectionMinimumAddress = 0xD415B8;
