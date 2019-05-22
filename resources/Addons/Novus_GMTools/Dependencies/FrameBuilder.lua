@@ -24,6 +24,19 @@ function CreateSlider(parent, name, title, minVal, maxVal, valStep)
     slider:SetScript("OnValueChanged", function(self,value)
       self.editbox:SetText(SimpleRound (value,valStep))
     end)
+    slider:EnableMouseWheel(true)
+    slider:SetScript('OnMouseWheel', function(self, delta)
+        local val = editbox:GetText()
+        if tonumber(val) then
+            local finalVal = val
+            if (delta > 0) then
+                finalVal = finalVal + valStep
+            else
+                finalVal = finalVal - valStep
+            end
+           self:SetValue(finalVal)
+        end
+    end)
     editbox:SetScript("OnTextChanged", function(self)
       local val = self:GetText()
       if tonumber(val) then
