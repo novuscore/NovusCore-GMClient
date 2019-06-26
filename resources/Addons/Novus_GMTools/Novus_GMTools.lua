@@ -1,4 +1,4 @@
-GM_SpeedSlider = CreateSlider(UIParent, "MySlider", "Speed", 1, 50, 1)
+GM_SpeedSlider = CreateSlider(Minimap, "MySlider", "Speed", 1, 50, 1)
 GM_SpeedSlider:HookScript("OnValueChanged", GM_ChangeSpeed)
 GM_SpeedSlider:Hide()
 

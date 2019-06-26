@@ -51,7 +51,7 @@ function CreateSlider(parent, name, title, minVal, maxVal, valStep)
       end
     end)
     slider.editbox = editbox
-    slider:SetPoint("CENTER", UIParent, "CENTER", 670, 215)
+    slider:SetPoint("BOTTOM", parent, "BOTTOM", 0, -60)
     return slider
 end
 function CreateCustomFrame(frameDetails) -- width, height, scale, texturePath, draggable
